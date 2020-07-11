@@ -1,7 +1,7 @@
 import torch
 import numpy as np
 from PIL import ImageFile
-from models.srnet.model import Srnet
+from model import Srnet
 from dataset import train_loader, valid_loader, test_loader, classes
 from utils.config import *
 ImageFile.LOAD_TRUNCATED_IMAGES = True
