@@ -92,6 +92,7 @@ for epoch in range(1, n_epochs+1):
     ###################
     model.train()
     for data, target in train_loader:
+        print(target.size(), target)
         #print(target.numpy())
         # move tensors to GPU if CUDA is available
         if train_on_gpu:
