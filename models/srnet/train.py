@@ -56,9 +56,9 @@ import torch.nn.functional as F
 train_on_gpu = torch.cuda.is_available()
 
 
-ckpt = torch.load('SRNet_model_weights.pt')
+# ckpt = torch.load('SRNet_model_weights.pt')
 model = Srnet()
-model.load_state_dict(ckpt['model_state_dict'])
+# model.load_state_dict(ckpt['model_state_dict'])
 
 print(model)
 torch.cuda.empty_cache()
