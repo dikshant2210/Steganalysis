@@ -1,12 +1,4 @@
-apt-get update
-apt-get install python3 python3-pip
-pip3 install torch torchvision
-pip3 install pandas
-pip3 install scipy
-pip3 install cv2
-pip3 install opencv-contrib-python-headless
-apt-get install libgtk2.0-dev
-pip3 install tqdm
-pip3 install albumentations
-pip3 install sklearn
-pip3 install colorama
+torch~=1.2.0
+numpy~=1.17.1
+torchvision~=0.4.0
+Pillow~=6.1.0
