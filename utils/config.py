@@ -6,3 +6,5 @@ valid_size = 0.1
 
 # number of epochs to train the model
 n_epochs = 15
+
+logging_frequency = 100

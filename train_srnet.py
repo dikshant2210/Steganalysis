@@ -35,7 +35,9 @@ for epoch in range(1, n_epochs+1):
     # train the model #
     ###################
     model.train()
+    current_batch = 0
     for data, target in train_loader:
+        current_batch += 1
         # move tensors to GPU if CUDA is available
         if train_on_gpu:
             data, target = data.cuda(), target.cuda()
@@ -52,6 +54,8 @@ for epoch in range(1, n_epochs+1):
         optimizer.step()
         # update training loss
         train_loss += loss.item()*data.size(0)
+        if current_batch % logging_frequency == 0:
+            print("Epoch: {}\tTraining Loss:{}".format(epoch, loss.item()))
 
     ######################
     # validate the model #
