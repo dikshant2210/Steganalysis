@@ -61,6 +61,7 @@ for epoch in range(1, n_epochs+1):
         # move tensors to GPU if CUDA is available
         if train_on_gpu:
             data, target = data.cuda(), target.cuda()
+        target[target != 0] = 1
         # forward pass: compute predicted outputs by passing inputs to the model
         output = model(data)
         # calculate the batch loss
@@ -102,6 +103,7 @@ for data, target in test_loader:
     # move tensors to GPU if CUDA is available
     if train_on_gpu:
         data, target = data.cuda(), target.cuda()
+    target[target != 0] = 1
     # forward pass: compute predicted outputs by passing inputs to the model
     output = model(data)
     # calculate the batch loss
