@@ -14,7 +14,7 @@ transform = transforms.Compose([
     transforms.Resize(size=(256, 256)),
     transforms.Grayscale(1),
     transforms.ToTensor(),
-    transforms.Normalize(0.5, 0.5)
+    # transforms.Normalize(0.5, 0.5)
     ])
 
 data = datasets.ImageFolder('data', transform=transform)
@@ -30,12 +30,13 @@ np.random.shuffle(indices_train)
 split_tv = int(np.floor(valid_size * num_train))
 train_new_idx, valid_idx = indices_train[split_tv:], indices_train[:split_tv]
 
-weights = torch.DoubleTensor([0.5, 0.16, 0.17, 0.17])
-train_sampler = WeightedRandomSampler(weights, len(weights))
+# weights = torch.DoubleTensor([0.5, 0.16, 0.17, 0.17])
+# train_sampler = WeightedRandomSampler(weights, batch_size)
 test_sampler = SubsetRandomSampler(test_idx)
 valid_sampler = SubsetRandomSampler(valid_idx)
 
-train_loader = torch.utils.data.DataLoader(data, batch_size=batch_size, sampler=train_sampler, num_workers=1)
+print(data)
+train_loader = torch.utils.data.DataLoader(data, batch_size=batch_size, num_workers=1, shuffle=True)
 valid_loader = torch.utils.data.DataLoader(data, batch_size=batch_size, sampler=valid_sampler, num_workers=1)
 test_loader = torch.utils.data.DataLoader(data, sampler = test_sampler, batch_size=batch_size, num_workers=1)
 classes = [0, 1]
