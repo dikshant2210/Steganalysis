@@ -6,7 +6,7 @@ class Srnet(nn.Module):
         def __init__(self):
                 super(Srnet, self).__init__()
                 # Layer 1
-                self.layer1 = nn.Conv2d(in_channels=1, out_channels=64,
+                self.layer1 = nn.Conv2d(in_channels=3, out_channels=64,
                         kernel_size=3, stride=1, padding=1, bias=False)
                 self.bn1 = nn.BatchNorm2d(64)
                 # Layer 2
@@ -102,7 +102,7 @@ class Srnet(nn.Module):
                 self.bn122 = nn.BatchNorm2d(512)
                 # avgp = torch.mean() in forward before fc
                 # Fully Connected layer
-                self.fc = nn.Linear(512*1*1, 2)
+                self.fc = nn.Linear(512*1*1, 1)
                 self.bce = nn.Sigmoid()
 
         def forward(self, inputs):

@@ -26,6 +26,8 @@ valid_transform = transforms.Compose([
 train_data = SteganalysisBinary(root_path='data/train', transforms=train_transform)
 valid_data = SteganalysisBinary(root_path='data/valid', transforms=valid_transform)
 
+print("Training size:{}".format(len(train_data)))
+
 train_loader = DataLoader(train_data, batch_size=batch_size, shuffle=True)
 valid_loader = DataLoader(valid_data, batch_size=batch_size)
 
@@ -42,7 +44,6 @@ for epoch in range(1, n_epochs+1):
     model.train()
     current_batch = 0
     for data, target in train_loader:
-        print(data, target)
         current_batch += 1
         if train_on_gpu:
             data, target = data.cuda(), target.cuda()
@@ -50,7 +51,8 @@ for epoch in range(1, n_epochs+1):
         optimizer.zero_grad()
         output = model(data)
 
-        loss = criterion(output, target)
+        output = output.view(-1)
+        loss = criterion(output.double(), target.double())
         loss.backward()
         optimizer.step()
 
@@ -65,7 +67,8 @@ for epoch in range(1, n_epochs+1):
 
         output = model(data)
 
-        loss = criterion(output, target)
+        output.view(-1)
+        loss = criterion(output.double(), target.double())
         valid_loss += loss.item()
 
     train_loss = train_loss / (len(train_data) / batch_size)
