@@ -42,6 +42,7 @@ for epoch in range(1, n_epochs+1):
     model.train()
     current_batch = 0
     for data, target in train_loader:
+        print(data, target)
         current_batch += 1
         if train_on_gpu:
             data, target = data.cuda(), target.cuda()
