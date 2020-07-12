@@ -1,5 +1,6 @@
 import os
 import cv2
+import random
 from torch.utils.data import Dataset
 
 
@@ -23,8 +24,8 @@ class SteganalysisBinary(Dataset):
                 for file in files:
                     self.images.append(os.path.join(self.root_path, f, file))
                     self.labels.append(1)
-        self.labels = self.labels[:1000]
-        self.root_path = self.images[:1000]
+        self.labels = random.shuffle(self.labels)[:1000]
+        self.root_path = random.shuffle(self.images)[:1000]
 
     def __getitem__(self, item):
         image_path = self.images[item]

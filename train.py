@@ -26,7 +26,7 @@ valid_transform = transforms.Compose([
 train_data = SteganalysisBinary(root_path='data/train', transforms=train_transform)
 valid_data = SteganalysisBinary(root_path='data/valid', transforms=valid_transform)
 
-train_loader = DataLoader(train_data, batch_size=batch_size)
+train_loader = DataLoader(train_data, batch_size=batch_size, shuffle=True)
 valid_loader = DataLoader(valid_data, batch_size=batch_size)
 
 criterion = torch.nn.BCELoss()
