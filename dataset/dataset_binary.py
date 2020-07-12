@@ -27,7 +27,7 @@ class SteganalysisBinary(Dataset):
         random.shuffle(self.labels)
         random.shuffle(self.images)
         self.images = self.images[:1000]
-        self.labels = self.images[:1000]
+        self.labels = self.labels[:1000]
 
     def __getitem__(self, item):
         image_path = self.images[item]
