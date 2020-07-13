@@ -1,6 +1,7 @@
 import os
 import cv2
 import random
+import torch
 from PIL import Image
 from torch.utils.data import Dataset
 
@@ -24,16 +25,17 @@ class SteganalysisBinary(Dataset):
                 for file in files:
                     self.images.append(os.path.join(self.root_path, f, file))
                     self.labels.append(1)
-        random.shuffle(self.labels)
-        random.shuffle(self.images)
-        self.images = self.images[:1000]
-        self.labels = self.labels[:1000]
+
+        temp = list(zip(self.images, self.labels))
+        random.shuffle(temp)
+        self.images, self.labels = zip(*temp)
 
     def __getitem__(self, item):
         image_path = self.images[item]
         target = self.labels[item]
         image = Image.fromarray(cv2.imread(image_path, cv2.IMREAD_COLOR))
         image = self.transforms(image)
+        image = torch.mean(image, axis=0, keepdim=True)
         return image, target
 
     def __len__(self):
