@@ -1,11 +1,11 @@
 import torch
 import numpy as np
+from sklearn.metrics import f1_score
 from torch.utils.data import DataLoader
 from models.srnet.model import Srnet, SRNET
 import torchvision.transforms as transforms
 from utils.config import *
 from dataset import SteganalysisBinary
-
 
 train_on_gpu = torch.cuda.is_available()
 model = SRNET()
@@ -36,19 +36,22 @@ print("Training size:{}".format(len(train_data)))
 train_loader = DataLoader(train_data, batch_size=batch_size, shuffle=True)
 valid_loader = DataLoader(valid_data, batch_size=batch_size)
 
-# criterion = torch.nn.BCELoss()
-criterion = torch.nn.CrossEntropyLoss()
+class_count = torch.sum((torch.tensor(train_data.labels) == 0).long())
+print("Class ratio: {}/{}".format(class_count, len(train_data) - class_count))
+weights = 1. / torch.tensor([class_count, len(train_data) - class_count]).float()
+criterion = torch.nn.CrossEntropyLoss(weight=weights.cuda())
 optimizer = torch.optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
 
 valid_loss_min = np.Inf  # track change in validation loss
 
-for epoch in range(1, n_epochs+1):
+for epoch in range(1, n_epochs + 1):
 
     train_loss = 0.0
     valid_loss = 0.0
 
     model.train()
     current_batch = 0
+    train_correct = 0.
     for data, target in train_loader:
         current_batch += 1
         if train_on_gpu:
@@ -57,7 +60,8 @@ for epoch in range(1, n_epochs+1):
         optimizer.zero_grad()
         output = model(data)
 
-        # output = output.view(-1)
+        _, pred = torch.max(output, 1)
+        train_correct += torch.sum(pred == target)
         loss = criterion(output, target)
         loss.backward()
         optimizer.step()
@@ -67,19 +71,27 @@ for epoch in range(1, n_epochs+1):
             print("Epoch: {}\tTraining Loss: {:.6f}".format(epoch, train_loss / current_batch))
 
     model.eval()
-    correct = 0.
+    val_correct = 0.
+    val_pred = list()
+    val_true = list()
     for data, target in valid_loader:
         if train_on_gpu:
             data, target = data.cuda(), target.cuda()
 
         output = model(data)
         _, pred = torch.max(output, 1)
-        correct += torch.sum(pred == target)
+        for x, t in zip(pred, target):
+            val_pred.append(x.item())
+            val_true.append(t.item())
+        val_correct += torch.sum(pred == target)
         loss = criterion(output, target)
         valid_loss += loss.item()
 
     train_loss = train_loss / (len(train_data) / batch_size)
     valid_loss = valid_loss / (len(valid_data) / batch_size)
 
-    print('Epoch: {} \tTraining Loss: {:.6f} \tValidation Loss: {:.6f} \t Validation Accuracy: {:.3f}'.format(
-        epoch, train_loss, valid_loss, correct / len(train_data)))
+    score = f1_score(val_true, val_pred)
+    print('Epoch: {} \tTraining Loss: {:.6f} \t Training Accuracy: {:.3f} \tValidation Loss: {:.6f} '
+          '\t Validation Accuracy: {:.3f} \tF1 Score: {:.4f}'.format(epoch, train_loss,
+                                                                     train_correct / len(train_data), valid_loss,
+                                                                     val_correct / len(valid_data), score))
