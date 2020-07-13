@@ -5,6 +5,6 @@ test_size = 0.3
 valid_size = 0.1
 
 # number of epochs to train the model
-n_epochs = 20
+n_epochs = 5
 
 logging_frequency = 5000

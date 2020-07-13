@@ -42,7 +42,7 @@ weights = 1. / torch.tensor([class_count, len(train_data) - class_count]).float(
 criterion = torch.nn.CrossEntropyLoss(weight=weights.cuda())
 optimizer = torch.optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
 
-valid_loss_min = np.Inf  # track change in validation loss
+max_score = 0.
 
 for epoch in range(1, n_epochs + 1):
 
@@ -95,3 +95,7 @@ for epoch in range(1, n_epochs + 1):
           '\t Validation Accuracy: {:.3f} \tF1 Score: {:.4f}'.format(epoch, train_loss,
                                                                      train_correct / len(train_data), valid_loss,
                                                                      val_correct / len(valid_data), score))
+    if score > max_score:
+        file_name = "weights/srnet_{:.4f}.pt".format(score)
+        print("Saving the model to {}".format(file_name))
+        torch.save(model.state_dict(), file_name)
