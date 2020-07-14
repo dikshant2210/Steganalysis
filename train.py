@@ -99,3 +99,4 @@ for epoch in range(1, n_epochs + 1):
         file_name = "weights/srnet_{:.4f}.pt".format(score)
         print("Saving the model to {}".format(file_name))
         torch.save(model.state_dict(), file_name)
+        max_score = score
