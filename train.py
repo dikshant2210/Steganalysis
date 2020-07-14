@@ -1,5 +1,4 @@
 import torch
-import numpy as np
 from sklearn.metrics import f1_score
 from torch.utils.data import DataLoader
 from models.srnet.model import Srnet, SRNET
