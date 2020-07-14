@@ -13,8 +13,8 @@ model = SRNET()
 if train_on_gpu:
     model.cuda()
 
-ckpt = torch.load('weights/SRNet_pretrained.pt')
-model.load_state_dict(ckpt['model_state_dict'])
+ckpt = torch.load('weights/srnet_0.8562.pt')
+model.load_state_dict(ckpt)
 
 test_transform = transforms.Compose([
     transforms.Resize(size=(256, 256)),
