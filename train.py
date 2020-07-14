@@ -57,7 +57,7 @@ for epoch in range(1, n_epochs + 1):
             data, target = data.cuda(), target.cuda()
 
         optimizer.zero_grad()
-        output = model(data)
+        output, _ = model(data)
 
         _, pred = torch.max(output, 1)
         train_correct += torch.sum(pred == target)
@@ -77,7 +77,7 @@ for epoch in range(1, n_epochs + 1):
         if train_on_gpu:
             data, target = data.cuda(), target.cuda()
 
-        output = model(data)
+        output, _ = model(data)
         _, pred = torch.max(output, 1)
         for x, t in zip(pred, target):
             val_pred.append(x.item())

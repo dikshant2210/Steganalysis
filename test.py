@@ -21,7 +21,7 @@ test_transform = transforms.Compose([
     transforms.ToTensor(),
     transforms.Normalize(mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225))])
 
-test_data = SteganalysisBinary(root_path='data/test', transforms=test_transform)
+test_data = SteganalysisBinary(root_path='data/valid', transforms=test_transform)
 print("Testing size:{}".format(len(test_data)))
 
 test_loader = DataLoader(test_data, batch_size=batch_size)
@@ -35,17 +35,17 @@ for data, target in test_loader:
     if train_on_gpu:
         data, target = data.cuda(), target.cuda()
 
-    output = model(data)
+    output, output_probs = model(data)
     _, pred = torch.max(output, 1)
-    prob = output[:, 1]
+    prob = output_probs[:, 1].cpu().detach().numpy()
     for x, t, p in zip(pred, target, prob):
         test_pred.append(x.item())
         test_true.append(t.item())
-        test_prob.append(prob)
+        test_prob.append(p)
     test_correct += torch.sum(pred == target)
 
 score = f1_score(test_true, test_pred)
 auc_score = alaska_weighted_auc(test_true, test_prob)
 
-print("F1-score: {:.4f}, Weighted AUC Score: {:.4f}, Test Accuracy: {}".format(
+print("F1-score: {:.4f}, Weighted AUC Score: {:.4f}, Test Accuracy: {:.3f}".format(
     score, auc_score, test_correct / len(test_data)))
