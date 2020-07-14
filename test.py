@@ -35,9 +35,9 @@ for data, target in test_loader:
         data, target = data.cuda(), target.cuda()
 
     output = model(data)
-    pred = output[:, 1]
-    print(pred)
-    for x, t in zip(pred, target):
+    _, pred = torch.max(output, 1)
+    prob = output[:, 1]
+    for x, t in zip(prob, target):
         test_pred.append(x.item())
         test_true.append(t.item())
     test_correct += torch.sum(pred == target)
@@ -45,4 +45,5 @@ for data, target in test_loader:
 score = f1_score(test_true, test_pred)
 auc_score = alaska_weighted_auc(test_true, test_pred)
 
-print("F1-score: {:.4f}, Weighted AUC Score: {:.4f}".format(score, auc_score))
+print("F1-score: {:.4f}, Weighted AUC Score: {:.4f}, Test Accuracy: {}".format(
+    score, auc_score, test_correct / len(test_data)))
