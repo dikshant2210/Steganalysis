@@ -30,6 +30,7 @@ model.eval()
 test_correct = 0.
 test_pred = list()
 test_true = list()
+test_prob = list()
 for data, target in test_loader:
     if train_on_gpu:
         data, target = data.cuda(), target.cuda()
@@ -37,13 +38,14 @@ for data, target in test_loader:
     output = model(data)
     _, pred = torch.max(output, 1)
     prob = output[:, 1]
-    for x, t in zip(prob, target):
+    for x, t, p in zip(pred, target, prob):
         test_pred.append(x.item())
         test_true.append(t.item())
+        test_prob.append(prob)
     test_correct += torch.sum(pred == target)
 
 score = f1_score(test_true, test_pred)
-auc_score = alaska_weighted_auc(test_true, test_pred)
+auc_score = alaska_weighted_auc(test_true, test_prob)
 
 print("F1-score: {:.4f}, Weighted AUC Score: {:.4f}, Test Accuracy: {}".format(
     score, auc_score, test_correct / len(test_data)))
