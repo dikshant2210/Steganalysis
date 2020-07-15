@@ -279,8 +279,8 @@ class Fitter:
             if summary_loss.avg < self.best_summary_loss:
                 self.best_summary_loss = summary_loss.avg
                 self.model.eval()
-                self.save(f'{self.base_dir}/best-checkpoint-srnet-{str(self.epoch).zfill(3)}epoch.bin')
-                for path in sorted(glob(f'{self.base_dir}/best-checkpoint-srnet-*epoch.bin'))[:-3]:
+                self.save(f'{self.base_dir}/best-checkpoint-b0-{str(self.epoch).zfill(3)}epoch.bin')
+                for path in sorted(glob(f'{self.base_dir}/best-checkpoint-b0-*epoch.bin'))[:-3]:
                     os.remove(path)
 
             if self.config.validation_scheduler:
@@ -383,7 +383,7 @@ net = get_net().cuda()
 class TrainGlobalConfig:
     num_workers = 0
     batch_size = 16
-    n_epochs = 20
+    n_epochs = 10
     lr = 0.001
     verbose = True
     verbose_step = 1
