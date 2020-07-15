@@ -372,7 +372,8 @@ class Fitter:
 
 def get_net():
     net = EfficientNet.from_pretrained('efficientnet-b0')
-    net._fc = nn.Linear(in_features=1408, out_features=4, bias=True)
+    num_ftrs = net._fc.in_features
+    net._fc = nn.Linear(in_features=num_ftrs, out_features=4, bias=True)
     return net
 
 
