@@ -200,7 +200,7 @@ class SRNET(nn.Module):
     def __init__(self):
         super(SRNET, self).__init__()
         # Layer 1
-        self.layer1 = nn.Conv2d(in_channels=1, out_channels=64,
+        self.layer1 = nn.Conv2d(in_channels=3, out_channels=64,
                                 kernel_size=3, stride=1, padding=1, bias=False)
         self.bn1 = nn.BatchNorm2d(64)
         # Layer 2
@@ -296,7 +296,7 @@ class SRNET(nn.Module):
         self.bn122 = nn.BatchNorm2d(512)
         # avgp = torch.mean() in forward before fc
         # Fully Connected layer
-        self.fc = nn.Linear(512 * 1 * 1, 2)
+        self.fc = nn.Linear(512 * 1 * 1, 4)
 
     def forward(self, inputs):
         # Layer 1
@@ -384,4 +384,4 @@ class SRNET(nn.Module):
         fc = self.fc(flatten)
         # print("FC:",fc.shape)
         out = F.log_softmax(fc, dim=1)
-        return fc, out
+        return fc
