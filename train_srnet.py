@@ -371,14 +371,15 @@ class Fitter:
 
 
 def get_net():
-    from models.srnet.srnet import Srnet
-    net = Srnet()
-    # ckpt = torch.load('weights/SRNet_model_weights.pt')
-    # net.load_state_dict(ckpt['model_state_dict'])
-    net.fc = nn.Linear(in_features=512, out_features=4)
-    # for name, layer in net.named_parameters():
-    #     if 'fc' not in name:
-    #         layer.requires_grad = False
+    # from models.srnet.srnet import Srnet
+    # net = Srnet()
+    # net.fc = nn.Linear(in_features=512, out_features=4)
+
+    from torchvision import models
+    net = models.resnet50(pretrained=True)
+    num_ftrs = net.fc.in_features
+    net.fc = nn.Linear(in_features=num_ftrs, out_features=4)
+
     return net
 
 
