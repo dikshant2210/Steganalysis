@@ -13,7 +13,7 @@ model = SRNET()
 if train_on_gpu:
     model.cuda()
 
-ckpt = torch.load('weights/srnet_0.8562.pt')
+ckpt = torch.load('weights/srnet_0.7991.pt')
 model.load_state_dict(ckpt)
 
 test_transform = transforms.Compose([
@@ -21,7 +21,7 @@ test_transform = transforms.Compose([
     transforms.ToTensor(),
     transforms.Normalize(mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225))])
 
-test_data = SteganalysisBinary(root_path='data/valid', transforms=test_transform)
+test_data = SteganalysisBinary(root_path='data/test', transforms=test_transform)
 print("Testing size:{}".format(len(test_data)))
 
 test_loader = DataLoader(test_data, batch_size=batch_size)

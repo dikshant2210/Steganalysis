@@ -379,9 +379,9 @@ net = get_net().cuda()
 
 
 class TrainGlobalConfig:
-    num_workers = 1
-    batch_size = 32
-    n_epochs = 25
+    num_workers = 0
+    batch_size = 16
+    n_epochs = 10
     lr = 0.001
     verbose = True
     verbose_step = 1
