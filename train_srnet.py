@@ -104,7 +104,7 @@ class DatasetRetriever(Dataset):
             sample = {'image': image}
             sample = self.transforms(**sample)
             image = sample['image']
-            image = image.mean(axis=0, keepdim=True)
+            # image = image.mean(axis=0, keepdim=True)
 
         target = onehot(4, label)
         return image, target
