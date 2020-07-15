@@ -16,7 +16,14 @@ import matplotlib.pyplot as plt
 from albumentations.pytorch.transforms import ToTensorV2
 from torch.utils.data import Dataset, DataLoader
 from torch.utils.data.sampler import SequentialSampler, RandomSampler
+from efficientnet_pytorch import EfficientNet
+from catalyst.data.sampler import BalanceClassSampler
+from sklearn import metrics
 import sklearn
+import warnings
+
+warnings.filterwarnings("ignore")
+
 
 SEED = 42
 
@@ -36,7 +43,7 @@ seed_everything(SEED)
 dataset = []
 
 for label, kind in enumerate(['Cover', 'JMiPOD', 'JUNIWARD', 'UERD']):
-    for path in glob('../input/alaska2-image-steganalysis/Cover/*.jpg'):
+    for path in glob('data/train/Cover/*.jpg'):
         dataset.append({
             'kind': kind,
             'image_name': path.split('/')[-1],
@@ -123,8 +130,6 @@ validation_dataset = DatasetRetriever(
     labels=dataset[dataset['fold'] == fold_number].label.values,
     transforms=get_valid_transforms(),
 )
-
-from sklearn import metrics
 
 
 class AverageMeter(object):
@@ -224,11 +229,6 @@ class LabelSmoothing(nn.Module):
             return loss.mean()
         else:
             return torch.nn.functional.cross_entropy(x, target)
-
-
-import warnings
-
-warnings.filterwarnings("ignore")
 
 
 class Fitter:
@@ -369,9 +369,6 @@ class Fitter:
             logger.write(f'{message}\n')
 
 
-from efficientnet_pytorch import EfficientNet
-
-
 def get_net():
     net = EfficientNet.from_pretrained('efficientnet-b2')
     net._fc = nn.Linear(in_features=1408, out_features=4, bias=True)
@@ -383,7 +380,7 @@ net = get_net().cuda()
 
 class TrainGlobalConfig:
     num_workers = 4
-    batch_size = 16
+    batch_size = 32
     n_epochs = 25
     lr = 0.001
     verbose = True
@@ -404,9 +401,6 @@ class TrainGlobalConfig:
         min_lr=1e-8,
         eps=1e-08
     )
-
-
-from catalyst.data.sampler import BalanceClassSampler
 
 
 def run_training():
