@@ -371,15 +371,8 @@ class Fitter:
 
 
 def get_net():
-    # from models.srnet.srnet import Srnet
-    # net = Srnet()
-    # net.fc = nn.Linear(in_features=512, out_features=4)
-
-    from torchvision import models
-    net = models.resnet50(pretrained=True)
-    num_ftrs = net.fc.in_features
-    net.fc = nn.Linear(in_features=num_ftrs, out_features=4)
-
+    net = EfficientNet.from_pretrained('efficientnet-b0')
+    net._fc = nn.Linear(in_features=1408, out_features=4, bias=True)
     return net
 
 
