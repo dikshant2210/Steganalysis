@@ -379,7 +379,7 @@ net = get_net().cuda()
 
 
 class TrainGlobalConfig:
-    num_workers = 4
+    num_workers = 1
     batch_size = 32
     n_epochs = 25
     lr = 0.001
