@@ -384,4 +384,4 @@ class SRNET(nn.Module):
         fc = self.fc(flatten)
         # print("FC:",fc.shape)
         out = F.log_softmax(fc, dim=1)
-        return fc
+        return fc, out
