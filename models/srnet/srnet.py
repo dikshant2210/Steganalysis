@@ -3,11 +3,11 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 
-class SRNET(nn.Module):
+class Srnet(nn.Module):
     def __init__(self):
-        super(SRNET, self).__init__()
+        super(Srnet, self).__init__()
         # Layer 1
-        self.layer1 = nn.Conv2d(in_channels=3, out_channels=64,
+        self.layer1 = nn.Conv2d(in_channels=1, out_channels=64,
                                 kernel_size=3, stride=1, padding=1, bias=False)
         self.bn1 = nn.BatchNorm2d(64)
         # Layer 2
@@ -103,7 +103,7 @@ class SRNET(nn.Module):
         self.bn122 = nn.BatchNorm2d(512)
         # avgp = torch.mean() in forward before fc
         # Fully Connected layer
-        self.fc = nn.Linear(512 * 1 * 1, 4)
+        self.fc = nn.Linear(512 * 1 * 1, 2)
 
     def forward(self, inputs):
         # Layer 1
