@@ -359,7 +359,7 @@ def get_net():
     net = EfficientNet.from_pretrained('efficientnet-b0')
     num_ftrs = net._fc.in_features
     net._fc = nn.Linear(in_features=num_ftrs, out_features=4, bias=True)
-    net.load_state_dict(torch.load('weights/b1/best-checkpoint-b0-008epoch.bin')['model_state_dict'])
+    net.load_state_dict(torch.load('weights/b0/best-checkpoint-b0-008epoch.bin')['model_state_dict'])
     return net
 
 
