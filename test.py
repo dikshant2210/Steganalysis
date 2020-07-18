@@ -285,7 +285,7 @@ class Fitter:
                 batch_size = images.shape[0]
                 images = images.to(self.device).float()
                 outputs = self.model(images)
-                _, pred = torch.max(outputs, dim=0)
+                _, pred = torch.max(outputs, dim=1)
                 for y_p, y_t in zip(pred, targets):
                     y_true.append(y_t)
                     y_pred.append(y_p)
