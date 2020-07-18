@@ -5,6 +5,7 @@ from skimage import io
 import torch
 from torch import nn
 import os
+import pickle as pkl
 from datetime import datetime
 import time
 import random
@@ -269,6 +270,7 @@ class Fitter:
         self.model.eval()
         summary_loss = AverageMeter()
         final_scores = RocAucMeter()
+        y_pred, y_true = list(), list()
         t = time.time()
         for step, (images, targets) in enumerate(val_loader):
             if self.config.verbose:
@@ -283,11 +285,16 @@ class Fitter:
                 batch_size = images.shape[0]
                 images = images.to(self.device).float()
                 outputs = self.model(images)
-                print(outputs.size())
+                _, pred = torch.max(outputs, dim=0)
+                for y_p, y_t in zip(pred, targets):
+                    y_true.append(y_t)
+                    y_pred.append(y_p)
                 loss = self.criterion(outputs, targets)
                 final_scores.update(targets, outputs)
                 summary_loss.update(loss.detach().item(), batch_size)
 
+        with open('resultls.pkl', 'wb') as file:
+            pkl.dump((y_true, y_pred), file)
         return summary_loss, final_scores
 
     def train_one_epoch(self, train_loader):
