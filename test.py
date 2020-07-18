@@ -283,6 +283,7 @@ class Fitter:
                 batch_size = images.shape[0]
                 images = images.to(self.device).float()
                 outputs = self.model(images)
+                print(outputs.size())
                 loss = self.criterion(outputs, targets)
                 final_scores.update(targets, outputs)
                 summary_loss.update(loss.detach().item(), batch_size)
