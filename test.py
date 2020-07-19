@@ -448,7 +448,7 @@ data_loader = DataLoader(
     dataset,
     batch_size=8,
     shuffle=False,
-    num_workers=2,
+    num_workers=0,
     drop_last=False,
 )
 
